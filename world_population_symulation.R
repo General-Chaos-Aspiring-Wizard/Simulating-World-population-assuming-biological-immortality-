@@ -208,7 +208,9 @@ create_population_graph <- function(data, log_scale = FALSE) {
                   legend.box = "vertical",
                   panel.grid.minor = element_blank(),  # Remove minor gridlines
                   panel.grid.major = element_line(color = "grey90"),
-                  plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+                  plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
+                  plot.background = element_rect(fill = "white", color = NA),
+                  panel.background = element_rect(fill = "white", color = NA)
             )
       
       if (log_scale) {
@@ -269,7 +271,9 @@ create_extended_population_graph <- function(data, log_scale = FALSE) {
                   axis.text = element_text(size = 10),
                   panel.grid.minor = element_blank(),
                   panel.grid.major = element_line(color = "grey90"),
-                  plot.margin = margin(t = 20, r = 20, b = 20, l = 20)
+                  plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
+                  plot.background = element_rect(fill = "white", color = NA),
+                  panel.background = element_rect(fill = "white", color = NA)
             )
       
       if (log_scale) {
@@ -294,37 +298,37 @@ ggsave("immortal_population_projection_3000_linear.png", extended_linear_plot, w
 
 # Create a summary dataframe of final values
 final_values <- bind_rows(
-  # For UN scenarios (keeping original order)
-  un_scenario_low_df %>% 
-    filter(Year == max(Year)) %>%
-    select(Scenario, Year, Population),
-  
-  un_scenario_mid_df %>%
-    filter(Year == max(Year)) %>%
-    select(Scenario, Year, Population),
-  
-  un_scenario_high_df %>%
-    filter(Year == max(Year)) %>%
-    select(Scenario, Year, Population),
-  
-  # For simulated scenarios (keeping original order)
-  simulated_scenario_df %>%
-    group_by(Scenario) %>%
-    filter(Year == max(Year)) %>%
-    select(Scenario, Year, Population),
-    
-  # For extended scenario to 3000
-  extended_scenario_df %>%
-    filter(Year == max(Year)) %>%
-    select(Scenario, Year, Population)
+      # For UN scenarios (keeping original order)
+      un_scenario_low_df %>% 
+            filter(Year == max(Year)) %>%
+            select(Scenario, Year, Population),
+      
+      un_scenario_mid_df %>%
+            filter(Year == max(Year)) %>%
+            select(Scenario, Year, Population),
+      
+      un_scenario_high_df %>%
+            filter(Year == max(Year)) %>%
+            select(Scenario, Year, Population),
+      
+      # For simulated scenarios (keeping original order)
+      simulated_scenario_df %>%
+            group_by(Scenario) %>%
+            filter(Year == max(Year)) %>%
+            select(Scenario, Year, Population),
+      
+      # For extended scenario to 3000
+      extended_scenario_df %>%
+            filter(Year == max(Year)) %>%
+            select(Scenario, Year, Population)
 ) %>%
-  mutate(
-    Scenario = format(Scenario, justify = "left"),
-    Year = format(Year, justify = "left"),
-    Population = sprintf("%8.1f", Population)  # Right-align with 8 spaces and 1 decimal
-  )
+      mutate(
+            Scenario = format(Scenario, justify = "left"),
+            Year = format(Year, justify = "left"),
+            Population = sprintf("%8.1f", Population)  # Right-align with 8 spaces and 1 decimal
+      )
 
 # Print the results in a formatted way
 print("Final Year Values for Each Scenario:")
 print("=====================================")
-print.data.frame(final_values, row.names = FALSE)
+print.data.frame(final_values, row.names = FALSE, right = FALSE)  
